@@ -1,15 +1,16 @@
 do {
     # Welcome message
-    Write-Host 'Blue Team Script: User Accounts, Local Groups, Processes, and Startup Applications Management'
+    Write-Host 'Blue Team Script: User Accounts, Local Groups, Processes, and File Management'
 
     # Menu options
     Write-Host '[1] View User Accounts'
     Write-Host '[2] Manage Local Groups'
     Write-Host '[3] View Processes'
     Write-Host '[4] View Startup Applications'
+    Write-Host '[5] View Files by Type'
 
     # Get user input
-    $choice = Read-Host "Enter your choice (1, 2, 3, 4, or 'exit' to quit): "
+    $choice = Read-Host "Enter your choice (1, 2, 3, 4, 5, or 'exit' to quit): "
 
     # Process user choice
     switch ($choice) {
@@ -91,15 +92,39 @@ do {
             Write-Host 'Make sure to run PowerShell as an administrator.'
             Write-Host 'Type the following command: wmic startup get caption,command'
             Read-Host "Press Enter to continue..."
-            wmic startup get caption,command,location
+            wmic startup get caption,command
         }
+        "5" {
+    # Prompt user to choose the type of file to search for
+    $fileType = Read-Host "Enter the file type to search for (exe or ps1): "
+
+    # Validate the file type
+    if ($fileType -eq "exe" -or $fileType -eq "ps1") {
+        # Prompt user for the path to search for files
+        $searchPath = Read-Host "Enter the path to search for $fileType files (e.g., C:\): "
+
+        # Validate the path
+        if (Test-Path $searchPath) {
+            # View files with their paths
+            Write-Host "** View $fileType Files in $searchPath **"
+            Write-Host "Type the following command to locate $fileType files in ${searchPath}:"
+            Write-Host "forfiles /P $searchPath /S /M *.$fileType /C `"cmd /c echo @path`""
+            Read-Host "Press Enter to continue..."
+            forfiles /P $searchPath /S /M *.$fileType /C "cmd /c echo @path"
+        } else {
+            Write-Error "Invalid path. Please enter a valid path."
+        }
+    } else {
+        Write-Error "Invalid file type. Please enter 'exe' or 'ps1'."
+    }
+}
         "exit" {
             # Exit outer loop for entire script
             Write-Host "Exiting script..."
             break
         }
         default {
-            Write-Error "Invalid choice. Please enter 1, 2, 3, 4, or 'exit'."
+            Write-Error "Invalid choice. Please enter 1, 2, 3, 4, 5, or 'exit'."
         }
     }
 } while ($choice -ne "exit") # Loop continues until user enters "exit"

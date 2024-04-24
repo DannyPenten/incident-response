@@ -96,10 +96,10 @@ do {
         }
         "5" {
     # Prompt user to choose the type of file to search for
-    $fileType = Read-Host "Enter the file type to search for (exe, ps1, or msi): "
+    $fileType = Read-Host "Enter the file type to search for (exe, ps1, msi, bat, zip): "
 
     # Validate the file type
-    if ($fileType -eq "exe" -or $fileType -eq "ps1" -or $fileType -eq "msi") {
+    if ($fileType -eq "exe" -or $fileType -eq "ps1" -or $fileType -eq "msi" -or $fileType -eq "bat" -or $fileType -eq "zip") {
         # Prompt user for the path to search for files
         $searchPath = Read-Host "Enter the path to search for $fileType files (e.g., C:\): "
 
@@ -115,7 +115,7 @@ do {
             Write-Error "Invalid path. Please enter a valid path."
         }
     } else {
-        Write-Error "Invalid file type. Please enter 'exe', 'ps1', or 'msi'."
+        Write-Error "Invalid file type. Please enter 'exe', 'msi', 'bat' or 'zip'."
     }
 }
         "exit" {
